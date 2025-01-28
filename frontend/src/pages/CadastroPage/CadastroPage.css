@@ -16,16 +16,16 @@
   
  
   .cadastro-logo {
-    width: 200px;
-    margin-bottom: 20px;
+    width: 150px;
+    margin-bottom: 10px;
     margin-left: 400px;
   }
   
  
   .cadastro-box {
-    background-color: rgba(255, 255, 255, 0.9);
+    background-color: rgba(255, 255, 255, 0.75);
     border-radius: 10px;
-    padding: 40px;
+    padding: 35px;
     width: 400px;
     box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
     text-align: center;
