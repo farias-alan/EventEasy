@@ -87,6 +87,7 @@
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 15px;
   }
   
   .login-btn:hover {
@@ -117,3 +118,20 @@
     margin-bottom: 20px;
   }
   
+
+.esqueci-senha{
+  background: none;
+  border: none;
+  color: #838282;
+  text-align: right;
+  margin-left: auto;
+  display: block;
+  cursor: pointer; 
+  font-size: 14px; 
+  margin-top: -10px;
+}
+
+.esqueci-senha:hover {
+  text-decoration: underline;
+  color: #1B1A67;
+}

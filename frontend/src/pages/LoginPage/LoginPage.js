@@ -1,17 +1,21 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import "./LoginPage.css";
 import logo from "../../templates/logo.png";
+import React, { useState } from "react";
+import RecuperarSenha from "../../Modal/RecuperarSenha";
+ 
 
 const LoginPage = () => {
-  const handleLogin = async (e) => {
-    e.preventDefault();
-
-    const form = e.target;
-    if (!form.checkValidity()) {
-      form.reportValidity();
-      return;
-    }
+    const [isModalOpen, setIsModalOpen] = useState(false);
+  
+    const handleLogin = async (e) => {
+      e.preventDefault();
+  
+      const form = e.target;
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
 
 
    //const email = form.email.value;
@@ -73,9 +77,14 @@ const LoginPage = () => {
             minLength="6"
           />
 
-          <Link to="/recuperar-senha" className="forgot-password">
+            <button
+            type="button"
+            className="esqueci-senha"
+            onClick={() => setIsModalOpen(true)}
+          >
             Esqueceu a senha?
-          </Link>
+          </button>
+          
           <button type="submit" className="btn login-btn">
             Entrar
           </button>
@@ -87,6 +96,9 @@ const LoginPage = () => {
           </Link>
         </p>
       </div>
+      {isModalOpen && (
+        <RecuperarSenha onClose={() => setIsModalOpen(false)} />
+      )}
     </div>
   );
 };
