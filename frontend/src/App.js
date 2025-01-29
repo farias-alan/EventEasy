@@ -5,6 +5,7 @@ import LoginPage from './pages/LoginPage/LoginPage';
 import RecuperarSenha from './Modal/RecuperarSenha'; 
 import CadastroPage from './pages/CadastroPage/CadastroPage';
 import ParticipantePage from './pages/ParticipantePage/ParticipantePage'
+import AdministradorPage from './pages/AdministradorPage/AdministradorPage';
 
 function App() {
   return (
@@ -15,6 +16,7 @@ function App() {
         <Route path="/recuperar-senha" element={<RecuperarSenha />} />
         <Route path="/cadastro" element={<CadastroPage />} />
         <Route path="/participante" element={<ParticipantePage />} />
+        <Route path="/administrador" element={<AdministradorPage />} />
       </Routes>
     </Router>
   );
