@@ -18,6 +18,10 @@ const HomePage = () => {
     navigate("/participante"); 
   };
 
+  const handleAdministradorClick = () => {
+    navigate("/administrador"); 
+  };
+
   return (
     <div className="home-container">
       <img src={logo} alt="EventEasy Logo" className="logo" />
@@ -37,6 +41,9 @@ const HomePage = () => {
           </button>
           <button className="btn btn-temp" onClick={handleParticipanteClick}>
             Página do Participante
+          </button>
+          <button className="btn btn-temp2" onClick={handleAdministradorClick}>
+            Página do Administrador
           </button>
         </div>
       </div>
