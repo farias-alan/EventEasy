@@ -14,6 +14,10 @@ const HomePage = () => {
     navigate("/cadastro"); 
   };
 
+  const handleParticipanteClick = () => {
+    navigate("/participante"); 
+  };
+
   return (
     <div className="home-container">
       <img src={logo} alt="EventEasy Logo" className="logo" />
@@ -30,6 +34,9 @@ const HomePage = () => {
           <p>OU</p>
           <button className="btn btn-secondary" onClick={handleRegisterClick}>
             Cadastrar
+          </button>
+          <button className="btn btn-temp" onClick={handleParticipanteClick}>
+            Página do Participante
           </button>
         </div>
       </div>

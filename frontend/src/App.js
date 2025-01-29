@@ -4,6 +4,7 @@ import HomePage from './pages/HomePage/HomePage';
 import LoginPage from './pages/LoginPage/LoginPage';
 import RecuperarSenha from './Modal/RecuperarSenha'; 
 import CadastroPage from './pages/CadastroPage/CadastroPage';
+import ParticipantePage from './pages/ParticipantePage/ParticipantePage'
 
 function App() {
   return (
@@ -13,6 +14,7 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/recuperar-senha" element={<RecuperarSenha />} />
         <Route path="/cadastro" element={<CadastroPage />} />
+        <Route path="/participante" element={<ParticipantePage />} />
       </Routes>
     </Router>
   );
