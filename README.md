@@ -13,7 +13,12 @@ Tem como objetivo ser uma ferramenta para organização e gerenciamento de event
 <hr/>
 
 ## **Funcionalidades**
-- Iserir texto
+
+- CRIAÇÃO DE USUÁRIO. (Administrador e Participante).
+- LOGIN DE USUÁRIO.
+- CADASTRO DE EVENTOS.
+- VISUALIZAR DETALHES DO EVENTOS.
+- ATUALIZAÇÃO DE DADOS CADASTRAIS DOS USUÁRIO.
 
 <hr/>
 
@@ -23,7 +28,7 @@ Tem como objetivo ser uma ferramenta para organização e gerenciamento de event
 📦frontend
 ┣ 📂public
 ┃   ┣ 📜index.html
-┃    ┗ 📜manifest.json
+┃   ┗ 📜manifest.json
 ┣ 📂src
 ┃   ┣ 📂modal
 ┃   ┣ 📂pages
@@ -39,7 +44,7 @@ Tem como objetivo ser uma ferramenta para organização e gerenciamento de event
 
 ## **Tecnologias Usadas** 
 - **FrontEnd**: React.
-- **BackEnd**: NodeJS.
+- **BackEnd**: Spr.
 - **Banco de Dados**: Online no Render.
 - **CSS**: Modular, por componente.
 
@@ -50,7 +55,23 @@ Tem como objetivo ser uma ferramenta para organização e gerenciamento de event
 
 <p align="justify">
 
-INSERIR TEXTO
+1. Clone este repositório:
+    ```bash
+    git clone https://github.com/seu-usuario/larsaodomingos.git
+    cd eventeasy
+    ```
+
+2. Instale as dependências:
+    ```bash
+    npm install
+    ```
+
+3. Inicie o servidor de desenvolvimento:
+    ```bash
+    npm start
+    ```
+
+Isso iniciará o servidor local e abrirá a aplicação no navegador
 
 </p>
 <hr/>
