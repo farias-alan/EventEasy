@@ -8,6 +8,8 @@
 
 <p align="justify">
 Tem como objetivo ser uma ferramenta para organização e gerenciamento de eventos, reunindo as etapas mais importantes em uma única plataforma. Desde o planejamento da programação e gerenciamento de participantes, o sistema foi desenvolvido para atender às necessidades de organizadores e participantes.
+    <br><br>
+Este repositório é exclusivamente dedicado ao desenvolvimento do Front-End do EventEasy, a plataforma de organização e gerenciamento de eventos. Aqui, concentram-se todas as implementações relacionadas à interface do usuário. O projeto utiliza React.js para a construção dos componentes visuais e a comunicação com a API do Back-End.
 </p>
 
 <hr/>
@@ -25,29 +27,26 @@ Tem como objetivo ser uma ferramenta para organização e gerenciamento de event
 ## **Estrutura do Projeto**
 
 ```bash
-📦frontend
-┣ 📂public
-┃   ┣ 📜index.html
-┃   ┗ 📜manifest.json
-┣ 📂src
-┃   ┣ 📂modal
-┃   ┣ 📂pages
-┃   ┗ 📂templates
-┃   ┣ 📜app.css
-┃   ┣ 📜app.js
-┃   ┗ 📜index.js
-┣ 📜package-lock.json
-┗ 📜package.json
+📦 frontend
+┣ 📂 public → Contém arquivos estáticos, como index.html e manifest.json.
+┣ 📂 src → Onde está a aplicação React.
+┃ ┣ 📂 modal → Contém os modais, como criação de evento, detalhes e edição.
+┃ ┣ 📂 pages → Páginas da aplicação, como login, home e painel do administrador.
+┃ ┗ 📂 templates → Contém arquivos reutilizáveis, como logo e estilos.
+┃ ┣ 📜 app.css → Estilização global da aplicação.
+┃ ┣ 📜 app.js → Componente principal que gerencia a navegação.
+┃ ┗ 📜 index.js → Ponto de entrada da aplicação React.
+┣ 📜 package-lock.json → Gerencia as dependências do projeto.
+┗ 📜 package.json → Define as dependências, scripts e metadados do projeto.
 ```
 ### Explicação das Pastas e Arquivos
 <hr/>
 
 ## **Tecnologias Usadas** 
 - **FrontEnd**: React.
-- **BackEnd**: Spr.
+- **BackEnd**: Spring boot
 - **Banco de Dados**: Online no Render.
 - **CSS**: Modular, por componente.
-
 
 <hr/>
 
