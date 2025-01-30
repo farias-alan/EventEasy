@@ -17,6 +17,10 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
           throw new Error("Token de autenticação não encontrado.");
         }
 
+        if (!token) {
+          alert("Token de autenticação não encontrado.");
+          return;
+        }
         const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
           method: "GET",
           headers: {
@@ -44,6 +48,12 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
     if (window.confirm("Tem certeza que deseja cancelar este evento?")) {
       try {
         const token = localStorage.getItem("authToken");
+          console.log("Token:", token); 
+        
+        if (!token) {
+          alert("Token de autenticação não encontrado.");
+          return;
+        }
         const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
           method: "DELETE",
           headers: {
