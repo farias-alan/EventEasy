@@ -9,6 +9,7 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
     local: "",
     descricao: "",
     palestras: [],
+    imagem: null, // Estado para armazenar a imagem
   });
   const [loading, setLoading] = useState(true);
   const [modalAdicionarAberto, setModalAdicionarAberto] = useState(false);
@@ -47,6 +48,17 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
 
   const handleChange = (e) => {
     setEvento({ ...evento, [e.target.name]: e.target.value });
+  };
+
+  const handleImageUpload = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        setEvento({ ...evento, imagem: reader.result.split(",")[1] }); // Converte a imagem para Base64
+      };
+      reader.readAsDataURL(file);
+    }
   };
 
   const handleSalvar = async () => {
@@ -97,8 +109,11 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
           />
         </h2>
 
-        <div className="image-upload">
-          <i className="fas fa-image"></i> {/* Ícone de upload */}
+        {/* 🔹 Upload de Imagem */}
+        <div className="form-group">
+          <label>Adicionar Imagem:</label>
+          <input type="file" accept="image/*" onChange={handleImageUpload} />
+          {evento.imagem && <img src={`data:image/png;base64,${evento.imagem}`} alt="Pré-visualização" className="preview-image" />}
         </div>
 
         <div className="form-group">
@@ -191,13 +206,6 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
           outline: none;
         }
 
-        .image-upload {
-          display: flex;
-          justify-content: center;
-          align-items: center;
-          padding: 10px;
-        }
-
         .form-group {
           margin-bottom: 10px;
         }
@@ -216,6 +224,14 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
           border: 1px solid #ccc;
         }
 
+        .preview-image {
+          width: 100%;
+          max-height: 200px;
+          object-fit: cover;
+          margin-top: 10px;
+          border-radius: 5px;
+        }
+
         .add-palestra-btn {
           background: #1B1A67;
           color: white;
@@ -227,10 +243,6 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
           font-weight: bold;
         }
 
-        .add-palestra-btn:hover {
-          background-color: #3533CD;
-        }
-
         .save-btn {
           width: 100%;
           background: #3533CD;
@@ -239,10 +251,6 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
           border-radius: 5px;
           border: none;
           cursor: pointer;
-        }
-
-        .save-btn:hover {
-          background-color: #1B1A67;
         }
         `}
       </style>
