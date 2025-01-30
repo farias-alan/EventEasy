@@ -24,7 +24,7 @@ const ParticipantePage = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:8080/api/eventos", {
+        const response = await fetch("https://eventeasy-api.onrender.com/api/eventos", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) {
@@ -54,7 +54,7 @@ const ParticipantePage = () => {
       }
 
       try {
-        const response = await fetch("http://localhost:8080/api/inscricoes", {
+        const response = await fetch("https://eventeasy-api.onrender.com/api/inscricoes", {
           headers: { Authorization: `Bearer ${token}` },
         });
         if (!response.ok) {
@@ -78,7 +78,7 @@ const ParticipantePage = () => {
       }
       
       try {
-        const response = await fetch(`http://localhost:8080/api/inscricoes/${inscricaoId}`, {
+        const response = await fetch(`https://eventeasy-api.onrender.com/api/inscricoes/${inscricaoId}`, {
           method: "DELETE",
           headers: { Authorization: `Bearer ${token}` },
         });

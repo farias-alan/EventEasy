@@ -26,7 +26,7 @@ const AdminPage = () => {
           throw new Error("Token de autenticação não encontrado.");
         }
 
-        const responseAdmin = await fetch("http://localhost:8080/api/users/me", {
+        const responseAdmin = await fetch("https://eventeasy-api.onrender.com/api/users/me", {
           method: "GET",
           credentials: "include",
           headers: {
@@ -40,7 +40,7 @@ const AdminPage = () => {
         const adminData = await responseAdmin.json();
         const adminId = adminData.id;
 
-        const response = await fetch("http://localhost:8080/api/eventos/administrador/" + adminId, {
+        const response = await fetch("https://eventeasy-api.onrender.com/api/eventos/administrador/" + adminId, {
           method: "GET",
           headers: {
             "Authorization": `Bearer ${token}`,

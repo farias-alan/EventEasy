@@ -14,7 +14,7 @@ const DetalhesEvento = ({ eventoId, closeModal }) => {
           throw new Error("Token de autenticação não encontrado.");
         }
 
-        const response = await fetch(`http://localhost:8080/api/eventos/${eventoId}`, {
+        const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
           method: "GET",
           headers: {
             "Content-Type": "application/json",

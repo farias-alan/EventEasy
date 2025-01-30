@@ -43,7 +43,7 @@ const CadastroPage = () => {
 
     // Envio para o backend
     try {
-      const response = await fetch("http://localhost:8080/api/auth/signup", {
+      const response = await fetch("https://eventeasy-api.onrender.com/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
