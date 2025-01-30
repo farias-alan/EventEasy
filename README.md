@@ -7,8 +7,9 @@
 </div>
 
 <p align="justify">
-    Tem como objetivo ser uma ferramenta para organização e gerenciamento de eventos, reunindo as etapas mais importantes em uma única plataforma. Desde o planejamento da programação e gerenciamento de participantes, o sistema foi desenvolvido para atender às necessidades de organizadores e participantes.
-    Este repositório é exclusivamente dedicado ao desenvolvimento do Front-End do EventEasy, a plataforma de organização e gerenciamento de eventos. Aqui, concentram-se todas as implementações relacionadas à interface do usuário. O projeto utiliza React.js para a construção dos componentes visuais e a comunicação com a API do Back-End.
+Tem como objetivo ser uma ferramenta para organização e gerenciamento de eventos, reunindo as etapas mais importantes em uma única plataforma. Desde o planejamento da programação e gerenciamento de participantes, o sistema foi desenvolvido para atender às necessidades de organizadores e participantes.
+    <br><br>
+Este repositório é exclusivamente dedicado ao desenvolvimento do Front-End do EventEasy, a plataforma de organização e gerenciamento de eventos. Aqui, concentram-se todas as implementações relacionadas à interface do usuário. O projeto utiliza React.js para a construção dos componentes visuais e a comunicação com a API do Back-End.
 </p>
 
 <hr/>
