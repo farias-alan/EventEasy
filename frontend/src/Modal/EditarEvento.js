@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from "react";
+import AdicionarPalestra from "./AdicionarPalestra"; // Importa o modal para adicionar palestras
 
 const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
   const [evento, setEvento] = useState({
@@ -10,6 +11,7 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
     palestras: [],
   });
   const [loading, setLoading] = useState(true);
+  const [modalAdicionarAberto, setModalAdicionarAberto] = useState(false);
 
   const getToken = () => localStorage.getItem("authToken");
 
@@ -70,12 +72,12 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
     }
   };
 
-  const handleAdicionarPalestra = () => {
-    const novoTema = prompt("Digite o tema da palestra:");
-    const novoPalestrante = prompt("Digite o nome do palestrante:");
-    if (novoTema && novoPalestrante) {
-      setEvento({ ...evento, palestras: [...evento.palestras, { tema: novoTema, palestrante: novoPalestrante }] });
-    }
+  const handleAdicionarPalestra = (novaPalestra) => {
+    setEvento((prevEvento) => ({
+      ...prevEvento,
+      palestras: [...prevEvento.palestras, novaPalestra],
+    }));
+    setModalAdicionarAberto(false);
   };
 
   if (loading) return <div className="modal">Carregando...</div>;
@@ -121,7 +123,7 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
 
         <div className="form-group">
           <label>Palestras:</label>
-          <button className="add-palestra-btn" onClick={handleAdicionarPalestra}>+ Adicionar Palestra</button>
+          <button className="add-palestra-btn" onClick={() => setModalAdicionarAberto(true)}>+ Adicionar Palestra</button>
           <textarea
             value={evento.palestras.map(p => `${p.tema} - ${p.palestrante}`).join("\n")}
             disabled
@@ -129,6 +131,14 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
         </div>
 
         <button className="save-btn" onClick={handleSalvar}>Salvar</button>
+
+        {/* 🔹 Modal para adicionar palestras */}
+        {modalAdicionarAberto && (
+          <AdicionarPalestra
+            closeModal={() => setModalAdicionarAberto(false)}
+            onAdicionar={handleAdicionarPalestra}
+          />
+        )}
       </div>
 
       {/* 🔹 CSS embutido dentro do componente */}
