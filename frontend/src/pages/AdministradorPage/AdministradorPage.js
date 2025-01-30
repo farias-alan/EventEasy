@@ -185,7 +185,7 @@ const AdminPage = () => {
                     <strong>Data:</strong> {event.data} <strong>Hora:</strong> {event.hora}
                   </p>
                   <p className="event-details"><strong>Local:</strong> {event.local}</p>
-                  <button className="event-button" onClick={() => setModalDetalhesProximo(event)}>
+                  <button className="event-button" onClick={() => setModalDetalhesProximo(event.id)}>
                       Ver Detalhes
                   </button>
                 </div>
@@ -198,7 +198,7 @@ const AdminPage = () => {
       {/* Modais */}
       {modalAberto && <NovoEvento closeModal={() => setModalAberto(false)} onSalvar={handleNovoEvento} />}
       {modalDetalhesProduzido && <DetalhesEvento eventoId={modalDetalhesProduzido} closeModal={() => setModalDetalhesProduzido(null)} />}
-      {modalDetalhesProximo && <DetalhesCancelarEvento evento={modalDetalhesProximo} closeModal={() => setModalDetalhesProximo(null)} onCancelar={handleCancelarEvento} />}
+      {modalDetalhesProximo && <DetalhesCancelarEvento evento={modalDetalhesProduzido} closeModal={() => setModalDetalhesProximo(null)} onCancelar={handleCancelarEvento} />}
     </div>
   );
 };

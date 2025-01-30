@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaEdit } from "react-icons/fa";
 import EditarEvento from "./EditarEvento";
 
-
+const token = localStorage.getItem("authToken");
 const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
   const [evento, setEvento] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -12,13 +12,27 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
   useEffect(() => {
     const fetchEvento = async () => {
       try {
-        const response = await fetch(`link api/${eventoId}`);
+        setLoading(true);
+
+        if (!token) {
+          throw new Error("Token de autenticação não encontrado.");
+        }
+
+        const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
+          method: "GET",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
+        });
+
         if (!response.ok) throw new Error("Erro ao buscar evento");
 
         const data = await response.json();
         setEvento(data);
       } catch (error) {
         console.error("Erro ao buscar evento:", error);
+        setEvento(null);
       } finally {
         setLoading(false);
       }
@@ -30,8 +44,12 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
   const handleCancelar = async () => {
     if (window.confirm("Tem certeza que deseja cancelar este evento?")) {
       try {
-        const response = await fetch(`link api/${eventoId}`, {
+        const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
           method: "DELETE",
+          headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${token}`,
+          },
         });
 
         if (!response.ok) throw new Error("Erro ao cancelar evento");
@@ -48,9 +66,12 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
   
   const handleSalvar = async (eventoEditado) => {
     try {
-      const response = await fetch(`link api/${eventoId}`, {
+      const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
         method: "PUT",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
         body: JSON.stringify(eventoEditado),
       });
 
