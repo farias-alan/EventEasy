@@ -1,21 +1,19 @@
 import React, { useState } from "react";
-//import { useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "./CadastroPage.css";
 import logo from "../../templates/logo.png";
-
-
 
 const CadastroPage = () => {
   const [form, setForm] = useState({
     nome: "",
     cpf: "",
     email: "",
-    senha: "",
+    password: "", // Alterado de "senha" para "password"
     confirmarSenha: "",
     tipoUsuario: "",
   });
 
-  //const navigate = useNavigate();
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -25,13 +23,13 @@ const CadastroPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-  
-    if (!form.nome || !form.cpf || !form.email || !form.senha || !form.confirmarSenha) {
+    // Validação dos campos
+    if (!form.nome || !form.cpf || !form.email || !form.password || !form.confirmarSenha) {
       alert("Por favor, preencha todos os campos.");
       return;
     }
 
-    if (form.senha !== form.confirmarSenha) {
+    if (form.password !== form.confirmarSenha) {
       alert("As senhas não coincidem.");
       return;
     }
@@ -44,34 +42,30 @@ const CadastroPage = () => {
     console.log("Formulário enviado com sucesso:", form);
 
     // Envio para o backend
-    /*
-  try {
-    const response = await fetch("LINK DO ENDPOINT AQUI", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(form),
-    });
+    try {
+      const response = await fetch("http://localhost:8080/api/auth/signup", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(form), // Agora o campo já é "password"
+      });
 
-    if (!response.ok) {
-      throw new Error("Erro ao cadastrar. Tente novamente.");
+      if (!response.ok) {
+        throw new Error("Erro ao cadastrar. Tente novamente.");
+      }
+
+      const data = await response.json();
+      console.log("Cadastro realizado com sucesso:", data);
+
+      alert("Cadastro realizado com sucesso!");
+      navigate("/login");
+
+    } catch (error) {
+      console.error("Erro ao cadastrar:", error);
+      alert("Erro ao cadastrar. Por favor, tente novamente mais tarde.");
     }
-
-    const data = await response.json();
-    console.log("Cadastro realizado com sucesso:", data);
-
-    
-    alert("Cadastro realizado com sucesso!");
-    navigate("/login");
-
-  } catch (error) {
-    console.error("Erro ao cadastrar:", error);
-    alert("Erro ao cadastrar. Por favor, tente novamente mais tarde.");
-  }
-  */
-};
-  
+  };
 
   return (
     <div className="cadastro-container">
@@ -115,14 +109,14 @@ const CadastroPage = () => {
             required
           />
 
-          <label className="input-label" htmlFor="senha">Senha</label>
+          <label className="input-label" htmlFor="password">Senha</label>
           <input
             type="password"
-            id="senha"
-            name="senha"
+            id="password"
+            name="password" // Alterado de "senha" para "password"
             className="input-field"
             placeholder="Digite sua senha"
-            value={form.senha}
+            value={form.password}
             onChange={handleChange}
             required
           />
@@ -144,7 +138,7 @@ const CadastroPage = () => {
               <input
                 type="radio"
                 name="tipoUsuario"
-                value="participante"
+                value="Participante"
                 onChange={handleChange}
               />
               Sou Participante
@@ -153,7 +147,7 @@ const CadastroPage = () => {
               <input
                 type="radio"
                 name="tipoUsuario"
-                value="administrador"
+                value="Administrador"
                 onChange={handleChange}
               />
               Sou Administrador de Eventos

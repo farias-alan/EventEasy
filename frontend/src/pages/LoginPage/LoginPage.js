@@ -21,7 +21,7 @@ const LoginPage = () => {
     const password = form.password.value;
 
     try {
-      const response = await fetch("LINK_DO_ENDPOINT_AQUI", {
+      const response = await fetch("http://localhost:8080/api/auth/signin", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, password }),
@@ -67,7 +67,7 @@ const LoginPage = () => {
             className="input-field"
             placeholder="Digite seu email"
             required
-            pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
+            //pattern="^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$"
           />
 
           <label className="input-label" htmlFor="password">

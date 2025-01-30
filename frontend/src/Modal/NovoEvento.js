@@ -10,11 +10,10 @@ const NovoEvento = ({ closeModal }) => {
   const [hora, setHora] = useState("");
   const [local, setLocal] = useState("");
   const [descricao, setDescricao] = useState("");
-  const [quantidade, setQuantidade] = useState("");
+  const [quantidadeParticipantes, setQuantidade] = useState("");
   const [imagem, setImagem] = useState(null);
   const [palestras, setPalestras] = useState([]);
   const [loading, setLoading] = useState(false);
-
   const [modalAdicionarAberto, setModalAdicionarAberto] = useState(false);
   const [modalEditarAberto, setModalEditarAberto] = useState(null);
 
@@ -38,9 +37,14 @@ const NovoEvento = ({ closeModal }) => {
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
-      setImagem(URL.createObjectURL(file));
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = () => {
+        setImagem(reader.result); // Mantém o prefixo "data:image/png;base64,"
+      };
     }
   };
+  
 
   const handleAdicionarPalestra = (novaPalestra) => {
     setPalestras([...palestras, novaPalestra]);
@@ -69,32 +73,46 @@ const NovoEvento = ({ closeModal }) => {
   };
 
   const handleCriarEvento = async () => {
-    if (!nomeEvento || !data || !hora || !local || !descricao || !quantidade) {
-      alert("Preencha todos os campos!");
-      return;
-    }
-
+// Validação dos campos obrigatórios
+if (
+  !nomeEvento ||
+  !data ||
+  !hora ||
+  !local ||
+  !quantidadeParticipantes
+) {
+  alert("Por favor, preencha todos os campos obrigatórios.");
+  return;
+}
+  
+    const imagemBase64 = imagem ? imagem.split(",")[1] : null; // Remove o prefixo antes de enviar
+  
     const novoEvento = {
       nome: nomeEvento,
       data,
       hora,
       local,
       descricao,
-      quantidade,
+      quantidadeParticipantes,
       palestras,
-      imagem
+      imagem: imagemBase64,
     };
-
+  
+    const token = localStorage.getItem("authToken"); // Obter o token do localStorage
+  
     setLoading(true);
     try {
-      const response = await fetch("link api", {
+      const response = await fetch("http://localhost:8080/api/eventos", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(novoEvento)
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`, // Incluir o token aqui
+        },
+        body: JSON.stringify(novoEvento),
       });
-
+  
       if (!response.ok) throw new Error("Erro ao criar evento.");
-
+  
       alert("Evento criado com sucesso!");
       closeModal();
     } catch (error) {
@@ -144,7 +162,7 @@ const NovoEvento = ({ closeModal }) => {
 
         <div className="form-group">
           <label>Quantidade de Participantes:</label>
-          <input type="number" value={quantidade} onChange={(e) => setQuantidade(e.target.value)} />
+          <input type="number" value={quantidadeParticipantes} onChange={(e) => setQuantidade(e.target.value)} />
         </div>
 
         <div className="form-group">
