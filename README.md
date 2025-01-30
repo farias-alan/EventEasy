@@ -57,7 +57,7 @@ Este repositório é exclusivamente dedicado ao desenvolvimento do Front-End do 
 1. Clone este repositório:
     ```bash
     git clone https://github.com/seu-usuario/larsaodomingos.git
-    cd eventeasy
+    cd frontend
     ```
 
 2. Instale as dependências:
