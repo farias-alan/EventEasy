@@ -25,19 +25,17 @@ Tem como objetivo ser uma ferramenta para organização e gerenciamento de event
 ## **Estrutura do Projeto**
 
 ```bash
-📦frontend
-┣ 📂public
-┃   ┣ 📜index.html
-┃   ┗ 📜manifest.json
-┣ 📂src
-┃   ┣ 📂modal
-┃   ┣ 📂pages
-┃   ┗ 📂templates
-┃   ┣ 📜app.css
-┃   ┣ 📜app.js
-┃   ┗ 📜index.js
-┣ 📜package-lock.json
-┗ 📜package.json
+📦 frontend
+┣ 📂 public → Contém arquivos estáticos, como index.html e manifest.json.
+┣ 📂 src → Onde está a aplicação React.
+┃ ┣ 📂 modal → Contém os modais, como criação de evento, detalhes e edição.
+┃ ┣ 📂 pages → Páginas da aplicação, como login, home e painel do administrador.
+┃ ┗ 📂 templates → Contém arquivos reutilizáveis, como logo e estilos.
+┃ ┣ 📜 app.css → Estilização global da aplicação.
+┃ ┣ 📜 app.js → Componente principal que gerencia a navegação.
+┃ ┗ 📜 index.js → Ponto de entrada da aplicação React.
+┣ 📜 package-lock.json → Gerencia as dependências do projeto.
+┗ 📜 package.json → Define as dependências, scripts e metadados do projeto.
 ```
 ### Explicação das Pastas e Arquivos
 <hr/>
@@ -47,7 +45,6 @@ Tem como objetivo ser uma ferramenta para organização e gerenciamento de event
 - **BackEnd**: Spr.
 - **Banco de Dados**: Online no Render.
 - **CSS**: Modular, por componente.
-
 
 <hr/>
 
