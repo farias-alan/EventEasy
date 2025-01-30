@@ -76,7 +76,7 @@ const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
       if (!response.ok) throw new Error("Erro ao atualizar evento");
 
       alert("Evento atualizado com sucesso!");
-      onSalvar(evento);
+  
       closeModal();
     } catch (error) {
       console.error("Erro ao atualizar evento:", error);
