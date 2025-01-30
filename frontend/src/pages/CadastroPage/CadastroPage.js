@@ -8,7 +8,7 @@ const CadastroPage = () => {
     nome: "",
     cpf: "",
     email: "",
-    password: "", // Alterado de "senha" para "password"
+    password: "", 
     confirmarSenha: "",
     tipoUsuario: "",
   });
@@ -23,7 +23,7 @@ const CadastroPage = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Validação dos campos
+    
     if (!form.nome || !form.cpf || !form.email || !form.password || !form.confirmarSenha) {
       alert("Por favor, preencha todos os campos.");
       return;
@@ -41,14 +41,14 @@ const CadastroPage = () => {
 
     console.log("Formulário enviado com sucesso:", form);
 
-    // Envio para o backend
+    
     try {
       const response = await fetch("https://eventeasy-api.onrender.com/api/auth/signup", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(form), // Agora o campo já é "password"
+        body: JSON.stringify(form), 
       });
 
       if (!response.ok) {
@@ -93,9 +93,16 @@ const CadastroPage = () => {
             className="input-field"
             placeholder="Digite seu CPF"
             value={form.cpf}
-            onChange={handleChange}
+            onChange={(e) => {
+              const value = e.target.value.replace(/\D/g, ""); 
+              if (value.length <= 11) { 
+                handleChange(e); 
+              }
+            }}
+            maxLength="11"
             required
           />
+
 
           <label className="input-label" htmlFor="email">Email</label>
           <input
@@ -113,7 +120,7 @@ const CadastroPage = () => {
           <input
             type="password"
             id="password"
-            name="password" // Alterado de "senha" para "password"
+            name="password"
             className="input-field"
             placeholder="Digite sua senha"
             value={form.password}

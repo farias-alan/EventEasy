@@ -93,27 +93,22 @@ const EditarPerfil = ({ userId, closeModal }) => {
         },
         body: JSON.stringify({
           novaSenha: senhaData.novaSenha,
-          confirmaNovaSenha: senhaData.confirmaNovaSenha, // 🛠 Adicionado!
+          confirmaNovaSenha: senhaData.confirmaNovaSenha,
         }),
       });
-  
-
 
       if (!response.ok) {
-        const errorText = await response.text(); // Pega o erro real do backend
+        const errorText = await response.text(); 
         throw new Error(`Erro ao trocar a senha: ${errorText}`);
       }
 
-      
       alert("Senha alterada com sucesso!");
       setSenhaData({ novaSenha: "", confirmaNovaSenha: "" });
     } catch (error) {
       console.error("Erro ao alterar a senha:", error.message);
-      alert(error.message); // Mostra o erro real
+      alert(error.message); 
     }
   };
-  
-  
 
   return (
     <div className="modal-overlay" onClick={closeModal}>
@@ -163,6 +158,89 @@ const EditarPerfil = ({ userId, closeModal }) => {
 
         <button className="modal-btn" onClick={handleChangePassword}>Trocar a Senha</button>
       </div>
+
+      {/* 🔹 CSS embutido no componente */}
+      <style>
+        {`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .modal-content {
+          background: #D9D9D9;
+          padding: 20px;
+          border-radius: 10px;
+          width: 350px;
+          text-align: center;
+          position: relative;
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: transparent;
+          border: none;
+          font-size: 18px;
+          cursor: pointer;
+        }
+
+        .modal-title {
+          color: #1B1A67;
+          font-size: 20px;
+          font-weight: bold;
+          margin-bottom: 15px;
+        }
+
+        .modal-label {
+          display: block;
+          text-align: left;
+          font-weight: bold;
+          color: #1B1A67;
+          margin-bottom: 5px;
+        }
+
+        .modal-input {
+          width: 100%;
+          padding: 8px;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+          margin-bottom: 15px;
+          font-size: 16px;
+        }
+
+        .modal-btn {
+          width: 100%;
+          background: #1B1A67;
+          color: white;
+          padding: 10px;
+          border-radius: 5px;
+          border: none;
+          cursor: pointer;
+          font-size: 16px;
+          font-weight: bold;
+        }
+
+        .modal-btn:hover {
+          background-color: #3533CD;
+        }
+
+        .modal-subtitle {
+          margin-top: 20px;
+          font-size: 18px;
+          font-weight: bold;
+          color: #1B1A67;
+        }
+        `}
+      </style>
     </div>
   );
 };

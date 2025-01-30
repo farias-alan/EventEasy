@@ -14,13 +14,6 @@ const HomePage = () => {
     navigate("/cadastro"); 
   };
 
-  const handleParticipanteClick = () => {
-    navigate("/participante"); 
-  };
-
-  const handleAdministradorClick = () => {
-    navigate("/administrador"); 
-  };
 
   return (
     <div className="home-container">
@@ -38,12 +31,6 @@ const HomePage = () => {
           <p>OU</p>
           <button className="btn btn-secondary" onClick={handleRegisterClick}>
             Cadastrar
-          </button>
-          <button className="btn btn-temp" onClick={handleParticipanteClick}>
-            Página do Participante
-          </button>
-          <button className="btn btn-temp2" onClick={handleAdministradorClick}>
-            Página do Administrador
           </button>
         </div>
       </div>
