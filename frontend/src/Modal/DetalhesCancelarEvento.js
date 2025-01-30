@@ -97,7 +97,7 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
   if (!evento) {
     return (
       <div className="modal-overlay">
-        <div className="modal-content">Erro ao carregar evento</div>
+        <div className="modal-content">Carregando...</div>
       </div>
     );
   }
@@ -136,10 +136,10 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
         <div className="form-group">
           <label>Palestras:</label>
           <textarea 
-            value={evento.palestras.map(p => `${p.tema} - ${p.palestrante}`).join("\n")} 
-            disabled 
-            className="large-box"
-          />
+  value={evento.palestras?.length ? evento.palestras.map(p => `${p.tema} - ${p.palestrante}`).join("\n") : "Nenhuma palestra cadastrada"} 
+  disabled 
+/>
+
         </div>
 
         <button className="cancel-btn" onClick={handleCancelar}>Cancelar Evento</button>

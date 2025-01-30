@@ -198,8 +198,8 @@ const AdminPage = () => {
       {/* Modais */}
       {modalAberto && <NovoEvento closeModal={() => setModalAberto(false)} onSalvar={handleNovoEvento} />}
       {modalDetalhesProduzido && <DetalhesEvento eventoId={modalDetalhesProduzido} closeModal={() => setModalDetalhesProduzido(null)} />}
-      {modalDetalhesProximo && <DetalhesCancelarEvento evento={modalDetalhesProduzido} closeModal={() => setModalDetalhesProximo(null)} onCancelar={handleCancelarEvento} />}
-    </div>
+      {modalDetalhesProximo && <DetalhesCancelarEvento eventoId={modalDetalhesProximo} closeModal={() => setModalDetalhesProximo(null)} onCancelar={handleCancelarEvento} />}
+      </div>
   );
 };
 
