@@ -185,8 +185,8 @@ const AdminPage = () => {
                     <strong>Data:</strong> {event.data} <strong>Hora:</strong> {event.hora}
                   </p>
                   <p className="event-details"><strong>Local:</strong> {event.local}</p>
-                  <button className="event-button" onClick={() => setModalDetalhesProduzido(event.id)}>
-                    Ver Detalhes
+                  <button className="event-button" onClick={() => setModalDetalhesProximo(event)}>
+                      Ver Detalhes
                   </button>
                 </div>
               );
