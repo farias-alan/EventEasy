@@ -1,19 +1,22 @@
-import React, { useEffect, useState } from "react";
-import { FaEdit } from "react-icons/fa";
-import EditarEvento from "./EditarEvento";
+import React, { useState, useEffect } from "react";
 
-const token = localStorage.getItem("authToken");
-
-const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
-  const [evento, setEvento] = useState(null);
+const EditarEvento = ({ eventoId, closeModal, onSalvar }) => {
+  const [evento, setEvento] = useState({
+    nome: "",
+    data: "",
+    hora: "",
+    local: "",
+    descricao: "",
+    palestras: [],
+  });
   const [loading, setLoading] = useState(true);
-  const [modalEditarAberto, setModalEditarAberto] = useState(false);
+
+  const getToken = () => localStorage.getItem("authToken");
 
   useEffect(() => {
     const fetchEvento = async () => {
       try {
-        setLoading(true);
-
+        const token = getToken();
         if (!token) {
           throw new Error("Token de autenticação não encontrado.");
         }
@@ -32,7 +35,6 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
         setEvento(data);
       } catch (error) {
         console.error("Erro ao buscar evento:", error);
-        setEvento(null);
       } finally {
         setLoading(false);
       }
@@ -41,43 +43,42 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
     fetchEvento();
   }, [eventoId]);
 
-  const handleCancelar = async () => {
-    if (window.confirm("Tem certeza que deseja cancelar este evento?")) {
-      try {
-        const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
-          method: "DELETE",
-          headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${token}`,
-          },
-        });
+  const handleChange = (e) => {
+    setEvento({ ...evento, [e.target.name]: e.target.value });
+  };
 
-        if (!response.ok) throw new Error("Erro ao cancelar evento");
+  const handleSalvar = async () => {
+    try {
+      const token = getToken();
+      const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+        body: JSON.stringify(evento),
+      });
 
-        alert("Evento cancelado com sucesso!");
-        closeModal();
-      } catch (error) {
-        console.error("Erro ao cancelar evento:", error);
-        alert("Erro ao cancelar evento.");
-      }
+      if (!response.ok) throw new Error("Erro ao atualizar evento");
+
+      alert("Evento atualizado com sucesso!");
+      onSalvar(evento);
+      closeModal();
+    } catch (error) {
+      console.error("Erro ao atualizar evento:", error);
+      alert("Erro ao atualizar evento.");
     }
   };
 
-  if (loading) {
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content">Carregando...</div>
-      </div>
-    );
-  }
+  const handleAdicionarPalestra = () => {
+    const novoTema = prompt("Digite o tema da palestra:");
+    const novoPalestrante = prompt("Digite o nome do palestrante:");
+    if (novoTema && novoPalestrante) {
+      setEvento({ ...evento, palestras: [...evento.palestras, { tema: novoTema, palestrante: novoPalestrante }] });
+    }
+  };
 
-  if (!evento) {
-    return (
-      <div className="modal-overlay">
-        <div className="modal-content">Erro ao carregar evento</div>
-      </div>
-    );
-  }
+  if (loading) return <div className="modal">Carregando...</div>;
 
   return (
     <div className="modal-overlay" onClick={closeModal}>
@@ -85,49 +86,158 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
         <button className="close-btn" onClick={closeModal}>✖</button>
 
         <h2 className="modal-title">
-          {evento.nome}
-          <FaEdit className="edit-icon" onClick={() => setModalEditarAberto(true)} />
+          <input
+            type="text"
+            name="nome"
+            value={evento.nome}
+            onChange={handleChange}
+            className="input-title"
+          />
         </h2>
+
+        <div className="image-upload">
+          <i className="fas fa-image"></i> {/* Ícone de upload */}
+        </div>
 
         <div className="form-group">
           <label>Data:</label>
-          <input type="text" value={evento.data} disabled />
+          <input type="date" name="data" value={evento.data} onChange={handleChange} />
         </div>
 
         <div className="form-group">
           <label>Hora:</label>
-          <input type="text" value={evento.hora} disabled />
+          <input type="time" name="hora" value={evento.hora} onChange={handleChange} />
         </div>
 
         <div className="form-group">
           <label>Local:</label>
-          <input type="text" value={evento.local} disabled />
+          <input type="text" name="local" value={evento.local} onChange={handleChange} />
         </div>
 
         <div className="form-group">
           <label>Descrição:</label>
-          <textarea value={evento.descricao} disabled className="no-resize" />
+          <textarea name="descricao" value={evento.descricao} onChange={handleChange} />
         </div>
 
         <div className="form-group">
           <label>Palestras:</label>
+          <button className="add-palestra-btn" onClick={handleAdicionarPalestra}>+ Adicionar Palestra</button>
           <textarea
-            value={evento.palestras?.length ? evento.palestras.map(p => `${p.tema} - ${p.palestrante}`).join("\n") : "Nenhuma palestra cadastrada"}
+            value={evento.palestras.map(p => `${p.tema} - ${p.palestrante}`).join("\n")}
             disabled
           />
         </div>
 
-        <button className="cancel-btn" onClick={handleCancelar}>Cancelar Evento</button>
+        <button className="save-btn" onClick={handleSalvar}>Salvar</button>
       </div>
 
-      {modalEditarAberto && (
-        <EditarEvento
-          eventoId={evento.id}  // Passando o ID do evento para o modal EditarEvento
-          closeModal={() => setModalEditarAberto(false)}
-        />
-      )}
+      {/* 🔹 CSS embutido dentro do componente */}
+      <style>
+        {`
+        .modal-overlay {
+          position: fixed;
+          top: 0;
+          left: 0;
+          width: 100%;
+          height: 100%;
+          background: rgba(0, 0, 0, 0.5);
+          display: flex;
+          justify-content: center;
+          align-items: center;
+        }
+
+        .modal-content {
+          background: #D9D9D9;
+          padding: 20px;
+          border-radius: 10px;
+          width: 350px;
+          text-align: left;
+          position: relative;
+        }
+
+        .close-btn {
+          position: absolute;
+          top: 10px;
+          right: 10px;
+          background: transparent;
+          border: none;
+          font-size: 18px;
+          cursor: pointer;
+        }
+
+        .modal-title {
+          text-align: center;
+          color: #1B1A67;
+        }
+
+        .input-title {
+          width: 100%;
+          font-size: 20px;
+          font-weight: bold;
+          text-align: center;
+          border: none;
+          background: none;
+          color: #1B1A67;
+          outline: none;
+        }
+
+        .image-upload {
+          display: flex;
+          justify-content: center;
+          align-items: center;
+          padding: 10px;
+        }
+
+        .form-group {
+          margin-bottom: 10px;
+        }
+
+        .form-group label {
+          display: block;
+          font-weight: bold;
+          color: #1B1A67;
+        }
+
+        .form-group input,
+        .form-group textarea {
+          width: 100%;
+          padding: 8px;
+          border-radius: 5px;
+          border: 1px solid #ccc;
+        }
+
+        .add-palestra-btn {
+          background: #1B1A67;
+          color: white;
+          padding: 8px;
+          width: 100%;
+          border-radius: 5px;
+          border: none;
+          cursor: pointer;
+          font-weight: bold;
+        }
+
+        .add-palestra-btn:hover {
+          background-color: #3533CD;
+        }
+
+        .save-btn {
+          width: 100%;
+          background: #3533CD;
+          color: white;
+          padding: 10px;
+          border-radius: 5px;
+          border: none;
+          cursor: pointer;
+        }
+
+        .save-btn:hover {
+          background-color: #1B1A67;
+        }
+        `}
+      </style>
     </div>
   );
 };
 
-export default DetalhesCancelarEvento;
+export default EditarEvento;
