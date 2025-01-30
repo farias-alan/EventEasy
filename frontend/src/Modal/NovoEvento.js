@@ -11,7 +11,7 @@ const NovoEvento = ({ closeModal }) => {
   const [imagem, setImagem] = useState(null);
   const [loading, setLoading] = useState(false);
   const [modalAdicionarAberto, setModalAdicionarAberto] = useState(false);
-  const [eventoCriado, setEventoCriado] = useState(null);
+  const token = localStorage.getItem("authToken"); 
 
   
   const handleImageUpload = (e) => {
@@ -25,7 +25,8 @@ const NovoEvento = ({ closeModal }) => {
     }
   };
 
-  
+  const [eventoCriadoId, setEventoCriadoId] = useState(null); // Nova variável de estado
+
   const handleCriarEvento = async () => {
     if (!nomeEvento || !data || !hora || !local || !quantidadeParticipantes) {
       alert("Por favor, preencha todos os campos obrigatórios.");
@@ -42,7 +43,7 @@ const NovoEvento = ({ closeModal }) => {
       imagem,
     };
 
-    const token = localStorage.getItem("authToken"); 
+    
 
     setLoading(true);
     try {
@@ -55,13 +56,14 @@ const NovoEvento = ({ closeModal }) => {
         body: JSON.stringify(novoEvento),
       });
 
+
       if (!response.ok) throw new Error("Erro ao criar evento.");
 
       const eventoCriado = await response.json();
-      alert("Evento criado com sucesso!");
-      setEventoCriado(eventoCriado); 
-      setModalAdicionarAberto(true); 
+      setEventoCriadoId(eventoCriado.id); // Armazena o ID do evento
+      setModalAdicionarAberto(true);
 
+      
     } catch (error) {
       console.error("Erro ao criar evento:", error);
       alert("Erro ao criar o evento.");
@@ -72,12 +74,15 @@ const NovoEvento = ({ closeModal }) => {
 
   
   const handleAdicionarPalestra = async (novaPalestra) => {
-    if (!eventoCriado) return;
+    if (!eventoCriadoId) return;
 
     try {
-      const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoCriado.id}/palestras`, {
+      const response = await fetch(`https://eventeasy-api.onrender.com/api/palestras/${eventoCriadoId}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
+        },
         body: JSON.stringify(novaPalestra),
       });
 
@@ -147,10 +152,11 @@ const NovoEvento = ({ closeModal }) => {
 
       
       {modalAdicionarAberto && (
-        <AdicionarPalestra
-          closeModal={() => setModalAdicionarAberto(false)}
-          onAdicionar={handleAdicionarPalestra}
-        />
+    <AdicionarPalestra
+      closeModal={() => setModalAdicionarAberto(false)}
+      onAdicionar={handleAdicionarPalestra}
+      eventoId={eventoCriadoId} // Passa o ID do evento como prop
+    />
       )}
     </div>
   );
@@ -160,7 +166,8 @@ export default NovoEvento;
 
 
 
-const styles = `
+const styleSheet = document.createElement("style");
+styleSheet.innerHTML = `
 .modal-overlay {
   position: fixed;
   top: 0;
@@ -282,7 +289,7 @@ background-color: #1B1A67
 
 `;
 
-const styleSheet = document.createElement("style");
+// styleSheet.type = "text/css";
 styleSheet.type = "text/css";
-styleSheet.innerText = styles;
+styleSheet.setAttribute("type", "text/css");
 document.head.appendChild(styleSheet);

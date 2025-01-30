@@ -15,13 +15,14 @@ const AdminPage = () => {
   const [modalAberto, setModalAberto] = useState(false);
   const [modalDetalhesProduzido, setModalDetalhesProduzido] = useState(null);
   const [modalDetalhesProximo, setModalDetalhesProximo] = useState(null);
+  const token = localStorage.getItem("authToken");
 
   useEffect(() => {
     const fetchEventos = async () => {
       setLoading(true);
 
       try {
-        const token = localStorage.getItem("authToken");
+        
         if (!token) {
           throw new Error("Token de autenticação não encontrado.");
         }

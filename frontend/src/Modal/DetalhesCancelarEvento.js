@@ -8,7 +8,6 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
   const [loading, setLoading] = useState(true);
   const [modalEditarAberto, setModalEditarAberto] = useState(false);
 
-  
   useEffect(() => {
     const fetchEvento = async () => {
       try {
@@ -63,7 +62,6 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
     }
   };
 
-  
   const handleSalvar = async (eventoEditado) => {
     try {
       const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
@@ -97,7 +95,7 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
   if (!evento) {
     return (
       <div className="modal-overlay">
-        <div className="modal-content">Carregando...</div>
+        <div className="modal-content">Erro ao carregar evento.</div>
       </div>
     );
   }
@@ -107,7 +105,6 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <button className="close-btn" onClick={closeModal}>✖</button>
 
-       
         <h2 className="modal-title">
           {evento.nome}
           <FaEdit className="edit-icon" onClick={() => setModalEditarAberto(true)} />
@@ -136,18 +133,17 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
         <div className="form-group">
           <label>Palestras:</label>
           <textarea 
-  value={evento.palestras?.length ? evento.palestras.map(p => `${p.tema} - ${p.palestrante}`).join("\n") : "Nenhuma palestra cadastrada"} 
-  disabled 
-/>
-
+            value={evento.palestras?.length ? evento.palestras.map(p => `${p.tema} - ${p.palestrante}`).join("\n") : "Nenhuma palestra cadastrada"} 
+            disabled 
+          />
         </div>
 
         <button className="cancel-btn" onClick={handleCancelar}>Cancelar Evento</button>
       </div>
 
-      
       {modalEditarAberto && (
         <EditarEvento
+          eventoId={eventoId}  // Passando o ID do evento para o EditarEvento
           evento={evento}
           closeModal={() => setModalEditarAberto(false)}
           onSalvar={handleSalvar}
@@ -158,113 +154,3 @@ const DetalhesCancelarEvento = ({ eventoId, closeModal }) => {
 };
 
 export default DetalhesCancelarEvento;
-
-
-const styles = `
-.modal-overlay {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  font-family: Arial, sans-serif;
-}
-
-.modal-content {
-  background: #D9D9D9;
-  padding: 20px;
-  border-radius: 8px;
-  min-height: 500px;
-  width: 450px;
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-
-.close-btn {
-  align-self: flex-end;
-  background: none;
-  border: none;
-  font-size: 18px;
-  cursor: pointer;
-}
-
-.modal-title {
-  font-size: 18px;
-  font-weight: bold;
-  color: #1B1A67;
-  margin-bottom: 10px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 100%;
-  position: relative;
-}
-
-.edit-icon {
-  font-size: 18px;
-  cursor: pointer;
-  color: #1B1A67;
-  margin-left: 8px;
-}
-
-.form-group {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-start;
-  width: 100%;
-  margin-bottom: 10px;
-}
-
-.form-group label {
-  font-size: 14px;
-  font-weight: bold;
-  color: #1B1A67;
-  margin-bottom: 5px;
-}
-
-.form-group input, .form-group textarea {
-  width: 100%;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-  background: #f0f0f0;
-}
-
-.no-resize {
-  resize: none;
-  height: 80px;
-}
-
-.large-box {
-  height: 120px;
-  width: 100%;
-}
-
-.cancel-btn {
-  background: #D9534F;
-  color: white;
-  font-size: 16px;
-  font-weight: bold;
-  padding: 8px;
-  border: none;
-  border-radius: 4px;
-  width: 100%;
-  cursor: pointer;
-  margin-top: 10px;
-}
-
-.cancel-btn:hover {
-  background: #B52A27;
-}
-`;
-
-
-const styleSheet = document.createElement("style");
-styleSheet.type = "text/css";
-styleSheet.innerText = styles;
-document.head.appendChild(styleSheet);
