@@ -1,8 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { FaEdit } from "react-icons/fa";
+import React, { useState } from "react";
 import AdicionarPalestra from "./AdicionarPalestra";
-import EditarPalestra from "./EditarPalestra";
-
 
 const NovoEvento = ({ closeModal }) => {
   const [nomeEvento, setNomeEvento] = useState("");
@@ -12,81 +9,29 @@ const NovoEvento = ({ closeModal }) => {
   const [descricao, setDescricao] = useState("");
   const [quantidadeParticipantes, setQuantidade] = useState("");
   const [imagem, setImagem] = useState(null);
-  const [palestras, setPalestras] = useState([]);
   const [loading, setLoading] = useState(false);
   const [modalAdicionarAberto, setModalAdicionarAberto] = useState(false);
-  const [modalEditarAberto, setModalEditarAberto] = useState(null);
+  const [eventoCriado, setEventoCriado] = useState(null);
 
-  useEffect(() => {
-    // Carregar palestras existentes do backend, se necessário
-    const fetchPalestras = async () => {
-      try {
-        const response = await fetch(`link api/palestras`);
-        if (response.ok) {
-          const data = await response.json();
-          setPalestras(data);
-        }
-      } catch (error) {
-        console.error("Erro ao carregar palestras:", error);
-      }
-    };
-
-    fetchPalestras();
-  }, []);
-
+  
   const handleImageUpload = (e) => {
     const file = e.target.files[0];
     if (file) {
       const reader = new FileReader();
       reader.readAsDataURL(file);
       reader.onload = () => {
-        setImagem(reader.result); // Mantém o prefixo "data:image/png;base64,"
+        setImagem(reader.result.split(",")[1]); 
       };
     }
   };
+
   
-
-  const handleAdicionarPalestra = (novaPalestra) => {
-    setPalestras([...palestras, novaPalestra]);
-    setModalAdicionarAberto(false);
-  };
-
-  const handleEditarPalestra = (id, palestraAtualizada) => {
-    setPalestras(palestras.map(p => (p.id === id ? palestraAtualizada : p)));
-    setModalEditarAberto(null);
-  };
-
-  const handleExcluirPalestra = async (id) => {
-    if (!window.confirm("Tem certeza que deseja excluir esta palestra?")) return;
-
-    try {
-      const response = await fetch(`link api/palestras/${id}`, { method: "DELETE" });
-      if (response.ok) {
-        setPalestras(palestras.filter(p => p.id !== id));
-      } else {
-        alert("Erro ao excluir palestra.");
-      }
-    } catch (error) {
-      console.error("Erro ao excluir palestra:", error);
-      alert("Erro ao excluir a palestra.");
-    }
-  };
-
   const handleCriarEvento = async () => {
-// Validação dos campos obrigatórios
-if (
-  !nomeEvento ||
-  !data ||
-  !hora ||
-  !local ||
-  !quantidadeParticipantes
-) {
-  alert("Por favor, preencha todos os campos obrigatórios.");
-  return;
-}
-  
-    const imagemBase64 = imagem ? imagem.split(",")[1] : null; // Remove o prefixo antes de enviar
-  
+    if (!nomeEvento || !data || !hora || !local || !quantidadeParticipantes) {
+      alert("Por favor, preencha todos os campos obrigatórios.");
+      return;
+    }
+
     const novoEvento = {
       nome: nomeEvento,
       data,
@@ -94,32 +39,62 @@ if (
       local,
       descricao,
       quantidadeParticipantes,
-      palestras,
-      imagem: imagemBase64,
+      imagem,
     };
-  
-    const token = localStorage.getItem("authToken"); // Obter o token do localStorage
-  
+
+    const token = localStorage.getItem("authToken"); 
+
     setLoading(true);
     try {
       const response = await fetch("http://localhost:8080/api/eventos", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`, // Incluir o token aqui
+          Authorization: `Bearer ${token}`,
         },
         body: JSON.stringify(novoEvento),
       });
-  
+
       if (!response.ok) throw new Error("Erro ao criar evento.");
-  
+
+      const eventoCriado = await response.json();
       alert("Evento criado com sucesso!");
-      closeModal();
+      setEventoCriado(eventoCriado); 
+      setModalAdicionarAberto(true); 
+
     } catch (error) {
       console.error("Erro ao criar evento:", error);
       alert("Erro ao criar o evento.");
     } finally {
       setLoading(false);
+    }
+  };
+
+  
+  const handleAdicionarPalestra = async (novaPalestra) => {
+    if (!eventoCriado) return;
+
+    try {
+      const response = await fetch(`http://localhost:8080/api/eventos/${eventoCriado.id}/palestras`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(novaPalestra),
+      });
+
+      if (!response.ok) throw new Error("Erro ao adicionar palestra.");
+
+      alert("Palestra adicionada com sucesso!");
+
+      const adicionarMais = window.confirm("Deseja adicionar outra palestra?");
+      if (adicionarMais) {
+        setModalAdicionarAberto(true);
+      } else {
+        closeModal(); 
+      }
+
+    } catch (error) {
+      console.error("Erro ao adicionar palestra:", error);
+      alert("Erro ao adicionar a palestra.");
     }
   };
 
@@ -132,7 +107,7 @@ if (
         <div className="form-group">
           <label>Adicionar Imagem:</label>
           <input type="file" accept="image/*" onChange={handleImageUpload} />
-          {imagem && <img src={imagem} alt="Pré-visualização" className="preview-image" />}
+          {imagem && <img src={`data:image/png;base64,${imagem}`} alt="Pré-visualização" className="preview-image" />}
         </div>
 
         <div className="form-group">
@@ -165,31 +140,16 @@ if (
           <input type="number" value={quantidadeParticipantes} onChange={(e) => setQuantidade(e.target.value)} />
         </div>
 
-        <div className="form-group">
-          <label>Palestras:</label>
-          <ul className="palestra-list">
-            {palestras.map((palestra) => (
-              <li key={palestra.id} className="palestra-item">
-                {palestra.tema} - {palestra.palestrante}
-                <FaEdit className="edit-icon" onClick={() => setModalEditarAberto(palestra.id)} />
-              </li>
-            ))}
-          </ul>
-          <button className="add-palestra-btn" onClick={() => setModalAdicionarAberto(true)}>+ Adicionar Palestra</button>
-        </div>
-
         <button className="create-event-btn" onClick={handleCriarEvento} disabled={loading}>
           {loading ? "Criando Evento..." : "Criar Evento"}
         </button>
       </div>
 
-      {modalAdicionarAberto && <AdicionarPalestra closeModal={() => setModalAdicionarAberto(false)} onAdicionar={handleAdicionarPalestra} />}
-      {modalEditarAberto && (
-        <EditarPalestra 
-          palestra={palestras.find(p => p.id === modalEditarAberto)} 
-          closeModal={() => setModalEditarAberto(null)} 
-          onEditar={handleEditarPalestra} 
-          onExcluir={handleExcluirPalestra} 
+      
+      {modalAdicionarAberto && (
+        <AdicionarPalestra
+          closeModal={() => setModalAdicionarAberto(false)}
+          onAdicionar={handleAdicionarPalestra}
         />
       )}
     </div>
@@ -200,7 +160,6 @@ export default NovoEvento;
 
 
 
-/* CSS */
 const styles = `
 .modal-overlay {
   position: fixed;
