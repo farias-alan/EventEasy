@@ -5,10 +5,20 @@ const ModalInscricao = ({ eventoId, closeModal }) => {
   const [loading, setLoading] = useState(true);
   const [inscrito, setInscrito] = useState(false);
 
+  // Função para obter o token JWT do localStorage
+  const getToken = () => {
+    return localStorage.getItem("authToken"); // Supondo que o token esteja armazenado no localStorage
+  };
+
   useEffect(() => {
     const fetchEvento = async () => {
       try {
-        const response = await fetch(`link da api/${eventoId}`);
+        const token = getToken();
+        const response = await fetch(`https://eventeasy-api.onrender.com/api/eventos/${eventoId}`, {
+          headers: {
+            "Authorization": `Bearer ${token}` // Inclui o token no cabeçalho
+          }
+        });
         if (!response.ok) {
           throw new Error("Erro ao buscar detalhes do evento");
         }
@@ -26,9 +36,13 @@ const ModalInscricao = ({ eventoId, closeModal }) => {
 
   const handleInscricao = async () => {
     try {
-      const response = await fetch("link da api/inscricao", {
+      const token = getToken();
+      const response = await fetch("https://eventeasy-api.onrender.com/api/inscricoes", {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: { 
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}` // Inclui o token no cabeçalho
+        },
         body: JSON.stringify({ eventoId })
       });
       if (response.ok) {

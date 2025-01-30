@@ -12,22 +12,29 @@ const ParticipantePage = () => {
   const [eventoSelecionado, setEventoSelecionado] = useState(null);
   const [menuAberto, setMenuAberto] = useState(false);
 
+  const getToken = () => localStorage.getItem("authToken");
+
   useEffect(() => {
     setLoading(true);
     const fetchEventos = async () => {
+      const token = getToken();
+      if (!token) {
+        console.error("Token JWT não encontrado. Redirecionando para login.");
+        return;
+      }
+
       try {
-        const response = await fetch("link da api/eventos");
+        const response = await fetch("http://localhost:8080/api/eventos", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!response.ok) {
           throw new Error("Erro ao buscar eventos");
         }
         const data = await response.json();
-
-        // Filtra apenas eventos futuros
         const eventosFuturos = data.filter(evento => {
           const dataEvento = new Date(evento.data.split("/").reverse().join("-"));
           return dataEvento >= new Date();
         });
-
         setEventos(eventosFuturos);
       } catch (error) {
         console.error("Erro ao buscar eventos:", error);
@@ -40,13 +47,20 @@ const ParticipantePage = () => {
 
   useEffect(() => {
     const fetchMeusEventos = async () => {
+      const token = getToken();
+      if (!token) {
+        console.error("Token JWT não encontrado. Redirecionando para login.");
+        return;
+      }
+
       try {
-        const response = await fetch("link da api/meus-eventos");
+        const response = await fetch("http://localhost:8080/api/inscricoes", {
+          headers: { Authorization: `Bearer ${token}` },
+        });
         if (!response.ok) {
           throw new Error("Erro ao buscar eventos inscritos");
         }
         const data = await response.json();
-
         setMeusEventos(data);
       } catch (error) {
         console.error("Erro ao buscar eventos inscritos:", error);
@@ -55,16 +69,23 @@ const ParticipantePage = () => {
     fetchMeusEventos();
   }, []);
 
-  const handleCancelarInscricao = async (eventoId) => {
+  const handleCancelarInscricao = async (inscricaoId) => {
     if (window.confirm("Tem certeza que deseja cancelar sua inscrição?")) {
+      const token = getToken();
+      if (!token) {
+        console.error("Token JWT não encontrado. Redirecionando para login.");
+        return;
+      }
+      
       try {
-        const response = await fetch(`link api/${eventoId}`, {
+        const response = await fetch(`http://localhost:8080/api/inscricoes/${inscricaoId}`, {
           method: "DELETE",
+          headers: { Authorization: `Bearer ${token}` },
         });
         if (response.ok) {
-          const eventoCancelado = meusEventos.find(evento => evento.id === eventoId);
+          const eventoCancelado = meusEventos.find(evento => evento.inscricaoId === inscricaoId);
           setEventos([...eventos, eventoCancelado]);
-          setMeusEventos(meusEventos.filter(evento => evento.id !== eventoId));
+          setMeusEventos(meusEventos.filter(evento => evento.inscricaoId !== inscricaoId));
         }
       } catch (error) {
         console.error("Erro ao cancelar inscrição:", error);
@@ -98,7 +119,7 @@ const ParticipantePage = () => {
           <div className="event-list">
             {eventos.map((event, index) => (
               <div key={index} className="event-card">
-                <img src={event.imagem} alt="Evento" className="event-image" />
+                <img src={`data:image/png;base64,${event.imagem}`} alt="Evento" className="event-image" />
                 <h4 className="event-title">{event.nome}</h4>
                 <p className="event-type">{event.tipo}</p>
                 <p className="event-details">
@@ -119,13 +140,11 @@ const ParticipantePage = () => {
         ) : (
           <div className="event-list">
             {meusEventos.map((event, index) => {
-             
               const dataEvento = new Date(event.data.split("/").reverse().join("-"));
               const eventoFuturo = dataEvento >= new Date(); 
-
               return (
                 <div key={index} className="event-card" style={{ backgroundColor: "#1B1A67", color: "white" }}>
-                  <img src={event.imagem} alt="Evento" className="event-image" />
+                  <img src={`data:image/png;base64,${event.imagem}`} alt="Evento" className="event-image" />
                   <h4 className="event-title">{event.nome}</h4>
                   <p className="event-type">{event.tipo}</p>
                   <p className="event-details">
@@ -134,13 +153,11 @@ const ParticipantePage = () => {
                   <p className="event-details">
                     <strong>Local:</strong> {event.local}
                   </p>
-
-                  {/* Só exibe o botão "Cancelar Inscrição" se o evento ainda não aconteceu */}
                   {eventoFuturo && (
                     <button 
                       className="event-button cancelar" 
                       style={{ backgroundColor: "red", color: "white" }} 
-                      onClick={() => handleCancelarInscricao(event.id)}
+                      onClick={() => handleCancelarInscricao(event.inscricaoId)}
                     >
                       Cancelar Inscrição
                     </button>
